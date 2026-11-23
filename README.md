@@ -140,4 +140,6 @@ The main goal is to understand how application components, containers, Kubernete
 
 Результат: 
 
+Все данные о пользователе сохраняются, даже после перезапуска приложения всё будет на месте 
+
 ![BudgetFlow Dashboard](./photo/screen1.png)
