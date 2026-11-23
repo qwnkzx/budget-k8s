@@ -96,10 +96,10 @@ helm template budgetflow ./budgetflow-chart
 Установка или обновление приложения:
 
 ```bash
-helm upgrade --install budgetflow ./budgetflow-chart \
-  -n budgetflow --create-namespace
+helm upgrade --install budgetflow budget-chart/ 
 ```
-
+Поды для фронтенда в namespace: frontend 
+Поды для бекенда: postgresql, backend, ingress; в namespace: backend
 Проверка ресурсов:
 
 ```bash
@@ -137,3 +137,7 @@ kubectl get pods,svc,deploy -n budgetflow
 **BudgetFlow is a hands-on DevOps learning project.**
 
 The main goal is to understand how application components, containers, Kubernetes resources and deployment automation work together.
+
+Результат: 
+
+![BudgetFlow Dashboard](./photo/screen1.png)
