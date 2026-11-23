@@ -1,0 +1,38 @@
+apiVersion: apps/v1 
+kind: StatefulSet
+metadata:
+  name: {{ .Values.db.name }}
+  namespace: {{ .Values.db.namespace }}
+spec:
+  serviceName: {{ .Values.db.name }}
+  replicas: {{ .Values.components.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.components.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.components.name }}
+    spec:
+      containers:
+        - name: {{ .Values.components.cont_name }}
+          image: {{ .Values.components.image }}
+          ports:
+            - containerPort: {{ .Values.db.port }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.components.secret_name }}
+          env:
+            - name: PGDATA
+              value: {{ .Values.components.pg_data_path }}
+          volumeMounts:
+            - name: data-store
+              mountPath: {{ .Values.components.pg_data_path }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data-store
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: {{ .Values.components.storage }}

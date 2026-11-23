@@ -1,0 +1,21 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: {{ .Values.deployments.frontend.name }}
+  namespace: {{ .Values.deployments.frontend.namespace }}
+spec:
+  replicas: {{ .Values.deployments.frontend.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.deployments.frontend.app }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployments.frontend.app }}
+    spec:
+      containers:
+        - name: {{ .Values.deployments.frontend.cont_name }}
+          image: {{ .Values.deployments.frontend.image }}
+          ports:
+            - containerPort: {{ .Values.deployments.frontend.containerPort }}
+              protocol: TCP

@@ -1,0 +1,8 @@
+components:
+  replicaCount: 1 
+  name: postgresql
+  cont_name: database 
+  image: postgres:16-alpine
+  secret_name: postgres-secret 
+  pg_data_path: /var/lib/postgresql/data 
+  storage: 1Gi

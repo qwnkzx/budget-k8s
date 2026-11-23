@@ -1,0 +1,68 @@
+deployments:
+  frontend:
+    name: deploy-frontend 
+    namespace: frontend 
+    replicaCount: 2 
+    app: frontend 
+    cont_name: frontend-app
+    image: bubuls/frontend:1.0.2
+    containerPort: 5173
+
+  backend:
+    name: deploy-backend
+    namespace: backend 
+    replicaCount: 3 
+    app: backend 
+    cont_name: backend-app
+    image: bubuls/backend:1.0.0
+    containerPort: 8181
+    secret_name: postgres-secret 
+
+services:
+  frontend:
+    name: front-svc
+    namespace: frontend
+    type: ClusterIP
+    app: frontend 
+    external_port: 80
+    interior_port: 5173
+
+  backend: 
+    name: backend-svc
+    namespace: backend 
+    type: ClusterIP
+    app: backend 
+    external_port: 8000
+    interior_port: 8000
+
+db:
+  name: postgresql-state
+  namespace: backend
+  ip_pod: "None"
+  app: postgresql
+  port: 5432
+  targetPort: 5432
+
+ingress_front:
+  name: ingress-for-project
+  namespace: frontend
+  app.kubernetes.io/name: ingress 
+  ingressClassName: nginx 
+  host: budget.local
+  pathType: Prefix 
+  path: "/"
+  svc_name: front-svc 
+  number: 80
+
+ingress_back:
+  name: ingress-backend 
+  namespace: backend 
+  app.kubernetes.io/name: ingress-2 
+  nginx.ingress.kubernetes.io/rewrite-target: /$2
+  nginx.ingress.kubernetes.io/use-regex: "true"
+  ingressClassName: nginx 
+  host: budget.local
+  pathType: ImplementationSpecific
+  path: '/api(/|$)(.*)'
+  svc_name: backend-svc
+  number: 8000
