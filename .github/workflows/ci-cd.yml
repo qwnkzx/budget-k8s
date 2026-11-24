@@ -1,4 +1,4 @@
-name: Build for GitOps
+name: Build and Push for GitOps
 on:
   push:
     branches: ["main"]
