@@ -32,7 +32,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Login into Docker hub 
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ env.DOCKER_USER }}" --passwordd-stdin
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ env.DOCKER_USER }}" --password-stdin
       
       - name: Build and Push Backend to Registry 
         run: |
