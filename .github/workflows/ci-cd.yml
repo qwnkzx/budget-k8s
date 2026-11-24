@@ -33,7 +33,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           username: ${{ env.DOCKER_USER }}
-          password: ${{ secret.DOCKER_PASSWORD }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
       
       - name: Build and Push Backend to Registry 
         uses: docker/build-push-action@v6
