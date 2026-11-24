@@ -1,3 +1,4 @@
+name: Build for GitOps
 on:
   push:
     branches: ["Main"]
