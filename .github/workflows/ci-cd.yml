@@ -1,0 +1,50 @@
+on:
+  push:
+    branches: ["Main"]
+    paths-ignore:
+      - budget-chart/**/*
+
+env:
+  DOCKER_USER: bubuls 
+  SHORT_SHA: ${{ github.sha }}
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint Backend 
+        run: | 
+          pip install ruff
+          ruff check backend/ || true 
+
+      - name: Lint frontend 
+        run: npx --yes @biomejs/biome lint frontend/ || true
+
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login into Docker hub 
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKER_USER }}
+          password: ${{ env.DOCKER_PASSWORD }}
+      
+      - name: Build and Push Backend to Registry 
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend 
+          push: true 
+          tags: ${{ env.DOCKER_USER}}/backend:${{ env.SHORT_SHA }}
+      
+      - name: Build and Push Frontend to Registry 
+        uses: docker/build-push-actions@v6 
+        with:
+          context: ./frontend 
+          push: true 
+          tags: ${{ env.DOCKER_USER }}/frontend:${{ env.SHORT_SHA }}
+  
