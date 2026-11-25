@@ -8,7 +8,7 @@ on:
       - 'photo/**'
 
 env:
-  DOCKER_USER: bubuls 
+  DOCKER_USER: bubuls
   SHORT_SHA: ${{ github.sha }}
 
 jobs:
@@ -43,4 +43,11 @@ jobs:
         run: | 
           docker build -t ${{ env.DOCKER_USER }}/frontend:${{ env.SHORT_SHA }} ./frontend
           docker push ${{ env.DOCKER_USER }}/frontend:${{ env.SHORT_SHA }}
+  
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Say Hello
+        run: echo "Hello"
   
