@@ -9,13 +9,15 @@ on:
 
 env:
   DOCKER_USER: bubuls
-  SHORT_SHA: ${{ github.sha }}
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: set short sha 
+        run: echo "SHORT_SHA=${GITHUB::5}" >> $GITHUB_ENV
 
       - name: Lint Backend 
         run: | 
