@@ -16,9 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: set short sha 
-        run: echo "SHORT_SHA=${GITHUB::5}" >> $GITHUB_ENV
-
       - name: Lint Backend 
         run: | 
           pip install ruff
@@ -32,6 +29,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
+      - name: set short sha 
+        run: echo "SHORT_SHA=${GITHUB::5}" >> $GITHUB_ENV
 
       - name: Login into Docker hub 
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ env.DOCKER_USER }}" --password-stdin
