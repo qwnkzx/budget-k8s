@@ -10,6 +10,7 @@
 
 ## Architecture
 
+### Runtime & Traffic Flow
 ```mermaid
 flowchart TB
     User([User]) --> Ingress[Ingress NGINX]
@@ -17,24 +18,40 @@ flowchart TB
     Ingress -->|/| FrontendService[Frontend Service]
     Ingress -->|/api| BackendService[Backend Service]
 
-    FrontendService --> FrontendPods[Frontend Pods]
-    BackendService --> BackendPods[Backend Pods]
+    FrontendService --> FrontendPods[Frontend Pods x2]
+    BackendService --> BackendPods[Backend Pods x3]
 
     BackendPods --> PostgreSQLService[PostgreSQL Service]
-    PostgreSQLService --> PostgreSQL[(PostgreSQL)]
+    PostgreSQLService --> PostgreSQL[(PostgreSQL StatefulSet)]
+    PostgreSQL --> PVC[(PersistentVolumeClaim)]
+    BackendPods -.-> Secrets[Secrets & ConfigMaps]
 ```
 
-### Application stack
+### GitOps Delivery Flow
+```mermaid
+flowchart LR
+    Dev([Developer]) -->|git push| GitHub[(GitHub Repository)]
+    GitHub -->|Pull & Reconcile| ArgoCD[Argo CD Controller]
+    ArgoCD -->|Helm Template & Sync| K8s[Kubernetes Cluster]
+```
 
-| Component          | Technology               |
-| ------------------ | ------------------------ |
-| Frontend           | React, TypeScript, Vite  |
-| Backend            | Python, FastAPI          |
-| Database           | PostgreSQL               |
-| Containerization   | Docker                   |
-| Orchestration      | Kubernetes               |
-| Package management | Helm                     |
-| Ingress            | NGINX Ingress Controller |
+### Application & Infrastructure Stack
+
+| Layer | Component | Technology |
+| :--- | :--- | :--- |
+| **Frontend** | User Interface | React, TypeScript, Vite |
+| **Backend** | REST API & Logic | Python, FastAPI |
+| **Database** | Persistent Storage | PostgreSQL (`StatefulSet` + `PVC`) |
+| **Networking** | Routing & Load Balancing | NGINX Ingress Controller, K8s Services |
+| **Packaging** | Templating & Releases | Helm Charts |
+| **GitOps / CD** | Continuous Delivery | Argo CD |
+| **Platform** | Orchestration & Runtime | Kubernetes (`kind`), Docker |
+
+### Key Architectural Highlights
+* **High Availability:** Stateless-компоненты масштабированы на несколько реплик (3 пода `backend` и 2 пода `frontend`) с балансировкой трафика через внутренние `ClusterIP` сервисы.
+* **Stateful Persistence:** База данных PostgreSQL развернута через `StatefulSet` с привязанным `PersistentVolumeClaim`, что гарантирует сохранность данных при перезапуске или пересоздании подов.
+* **Declarative GitOps:** Состояние кластера полностью описано в Helm-чарте и синхронизируется с Git-репозиторием через **Argo CD** (`self-heal` и `prune`), исключая ручные правки в кластере.
+
 
 ---
 
