@@ -53,3 +53,23 @@ jobs:
       - name: Say Hello
         run: echo "Hello"
   
+  update-manifests:
+    runs-on: ubuntu-latest
+    needs: build
+
+    permissions:
+      contents: write 
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: set short sha 
+        run: echo "SHORT_SHA=${GITHUB_SHA::5}" >> $GITHUB_ENV
+
+      - name: install an yq  
+        run: |
+          sudo snap install yq 
+      
+      - name: find and change line in values
+        run: |
+          yq -i '.deployments.frontend.image = "bubuls/frontend:${{ env.SHORT_SHA }}" ' budget-chart/values.yaml
+          yq -i '.deployments.backend.image = "bubuls/backend:${{ env.SHORT_SHA}}" ' budget-chart/values.yaml
