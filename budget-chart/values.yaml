@@ -43,6 +43,12 @@ db:
   port: 5432
   targetPort: 5432
   replicaCount: 1 
+  sec_name: postgresql
+  cont_name: database 
+  image: postgres:16-alpine
+  secret_name: postgres-secret 
+  pg_data_path: /var/lib/postgresql/data 
+  storage: 1Gi
 
 ingress_front:
   name: ingress-for-project

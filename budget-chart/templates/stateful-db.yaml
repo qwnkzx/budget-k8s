@@ -8,26 +8,26 @@ spec:
   replicas: {{ .Values.db.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Values.components.name }}
+      app: {{ .Values.db.sec_name }}
   template:
     metadata:
       labels:
-        app: {{ .Values.components.name }}
+        app: {{ .Values.db.sec_name }}
     spec:
       containers:
-        - name: {{ .Values.components.cont_name }}
-          image: {{ .Values.components.image }}
+        - name: {{ .Values.db.cont_name }}
+          image: {{ .Values.db.image }}
           ports:
             - containerPort: {{ .Values.db.port }}
           envFrom:
             - secretRef:
-                name: {{ .Values.components.secret_name }}
+                name: {{ .Values.db.secret_name }}
           env:
             - name: PGDATA
-              value: {{ .Values.components.pg_data_path }}
+              value: {{ .Values.db.pg_data_path }}
           volumeMounts:
             - name: data-store
-              mountPath: {{ .Values.components.pg_data_path }}
+              mountPath: {{ .Values.db.pg_data_path }}
   volumeClaimTemplates:
     - metadata:
         name: data-store
@@ -35,4 +35,4 @@ spec:
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: {{ .Values.components.storage }}
+            storage: {{ .Values.db.storage }}
