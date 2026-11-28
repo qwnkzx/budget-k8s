@@ -76,24 +76,26 @@ flowchart LR
 Цель — отказаться от ручного применения множества YAML-файлов и получить возможность разворачивать всё приложение одной командой.
 
 ```bash
-helm upgrade --install budgetflow ./budgetflow-chart \
+helm upgrade --install budgetflow ./budget-chart \
   -n budgetflow --create-namespace
 ```
 
 ### Helm Chart structure
 
 ```text
-budgetflow-chart/
+budget-chart/
 ├── Chart.yaml
 ├── values.yaml
 └── templates/
-    ├── frontend-deployment.yaml
-    ├── backend-deployment.yaml
+    ├── deployment-frontend.yaml
+    ├── deployment-backend.yaml
     ├── service.yaml
-    ├── postgresql-statefulset.yaml
-    ├── ingress.yaml
-    ├── configmap.yaml
-    └── secret.yaml
+    ├── ingress-backend.yaml
+    ├── ingress-frontend.yaml
+    ├── secrets-data.yaml
+    ├── stateful-db.yaml
+    ├── svc-database.yaml
+    └── svc.yaml (Go templates)
 ```
 
 Конфигурация компонентов хранится в `values.yaml`, а Helm Templates позволяют генерировать Kubernetes-манифесты на основе общих шаблонов.
@@ -107,7 +109,7 @@ budgetflow-chart/
 Проверка сгенерированных манифестов:
 
 ```bash
-helm template budgetflow ./budgetflow-chart
+helm template budgetflow ./budget-chart
 ```
 
 Установка или обновление приложения:
@@ -120,7 +122,7 @@ helm upgrade --install budgetflow budget-chart/
 Проверка ресурсов:
 
 ```bash
-kubectl get pods,svc,deploy -n budgetflow
+kubectl get pods,svc,deploy -n frontend/backend
 ```
 
 ---
@@ -132,8 +134,8 @@ kubectl get pods,svc,deploy -n budgetflow
 - [x] Первичное развёртывание в Kubernetes.
 - [x] Перенос Kubernetes-манифестов в Helm.
 - [ ] Единая команда для развёртывания приложения.
-- [ ] Автоматизация сборки Docker-образов через GitLab CI/CD.
-- [ ] GitOps-развёртывание с помощью Argo CD.
+- [x] Автоматизация сборки Docker-образов через GitLab CI/CD.
+- [x] GitOps-развёртывание с помощью Argo CD.
 - [ ] Мониторинг приложения через Prometheus и Grafana.
 
 ---
@@ -164,3 +166,5 @@ The main goal is to understand how application components, containers, Kubernete
 
 
 GitOps Arhitecture: 
+
+![ArgoCD](./photo/screen2.png)
