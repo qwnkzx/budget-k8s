@@ -1,5 +1,4 @@
 components:
-  replicaCount: 1 
   name: postgresql
   cont_name: database 
   image: postgres:16-alpine

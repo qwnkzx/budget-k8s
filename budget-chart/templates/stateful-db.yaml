@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Values.db.namespace }}
 spec:
   serviceName: {{ .Values.db.name }}
-  replicas: {{ .Values.components.replicaCount }}
+  replicas: {{ .Values.db.replicaCount }}
   selector:
     matchLabels:
       app: {{ .Values.components.name }}

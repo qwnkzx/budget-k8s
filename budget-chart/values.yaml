@@ -42,6 +42,7 @@ db:
   app: postgresql
   port: 5432
   targetPort: 5432
+  replicaCount: 1 
 
 ingress_front:
   name: ingress-for-project
